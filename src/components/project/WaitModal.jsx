@@ -55,7 +55,7 @@ const WaitModal = ({ isOpen, onClose, onInsert }) => {
                             onChange={(e) => setWaitType(e.target.value)}
                             className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
-                            <option value="Seconds">Seconds</option>
+                           
                             <option value="Minutes">Minutes</option>
                             <option value="Hours">Hours</option>
                             <option value="Days">Days</option>

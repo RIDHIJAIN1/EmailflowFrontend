@@ -58,11 +58,11 @@ const Navbar = () => {
   );
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: '#DDA0DD', boxShadow: 3 }}>
+    <AppBar position="fixed" sx={{ backgroundColor: '#60a5fa', boxShadow: 3 }}>
       <Toolbar>
         {/* Logo/Heading */}
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          <Link to="/" className="text-white text-2xl font-bold">
+          <Link to="/" className="text-white text-2xl font-bold font-serif">
             EmailFlow
           </Link>
         </Typography>

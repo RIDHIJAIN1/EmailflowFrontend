@@ -16,6 +16,7 @@ import SourceBlockModal from "../../components/project/SourceBlockModal";
 import WaitModal from "../../components/project/WaitModal";
 import { createNewEmailNode, createNewListNode } from "./services";
 import { getProjectById, saveSequence, startProject } from "../../utils/api";
+import { toast } from "react-toastify";
 // import { useParams } from 'react-router-dom';
 
 const initialNodes = [
@@ -59,6 +60,7 @@ function Project() {
   const [modalContent, setModalContent] = useState({});
   const [showWaitField, setShowWaitField] = useState(false);
   const [modalType, setModalType] = useState(1);
+  const [isSaved , setIsSaved] = useState(false);
   // horizontal = 1   vertical = 3
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -171,12 +173,17 @@ function Project() {
   };
 
   const handleStart = async () => {
-    try {
+    if(!isSaved){
+      toast.warning("Please save your project before starting")
+      return;
+    }
+    try {    
       const response = await startProject(id);
-      setProjects(response);
+      toast.success("Flow will begin in an hour")
       console.log(response);
     } catch (error) {
       console.log(error);
+      toast.error("Error starting sequence")
     }
   };
 
@@ -211,9 +218,12 @@ function Project() {
 
     try {
       const savedData = await saveSequence(id, { sequence: result });
+      setIsSaved(true);
+      toast.success("Flow Saved Successfully")
       console.log("Project uploaded successfully", savedData);
     } catch (error) {
       console.log("Error saving sequence", error);
+      toast.error("Error")
     }
   };
 
@@ -243,25 +253,29 @@ function Project() {
     <>
       <div className="m-auto justify-center mx-auto">
         <div className="flex justify-evenly items-center pt-6 pb-4">
-          <h1 className="font-serif text-4xl font-semibold  ">
+          <h1 className="font-serif text-4xl font-semibold pt-10  text-blue-400">
             Design Your Email Marketing Sequence Flow
           </h1>
-          <button
-            type="button"
-            className="px-4 py-1 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            onClick={handelSave}
-          >
-            Save
-          </button>
-          <button
-            type="button"
-            className="px-4 py-1 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            onClick={handleStart}
-          >
-            Start
-          </button>
+         
         </div>
-        <div className="" style={{ width: "100vw", height: "100vh" }}>
+        <div className="flex justify-center">
+        <button
+  type="button"
+  className="px-6 py-2 mr-2 text-white bg-gradient-to-r from-blue-400 to-blue-500 shadow-md rounded-lg hover:from-blue-500 hover:to-blue-600 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
+  onClick={handelSave}
+>
+  Save
+</button>
+<button
+  type="button"
+  className="px-6 py-2 text-white bg-gradient-to-r from-indigo-500 to-indigo-600 shadow-md rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-400"
+  onClick={handleStart}
+>
+  Start
+</button>
+
+          </div>
+        <div className="" style={{ width: "100vw", height: "200vh" }}>
           <ReactFlow
             nodes={nodes}
             edges={edges}

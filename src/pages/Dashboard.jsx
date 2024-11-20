@@ -55,7 +55,7 @@ const Dashboard = () => {
       <div className="min-h-[24vh]"></div>
       <div className="mx-[15%] mt-[-14vh]">
         {/* Heading Section */}
-        <h1 className="text-6xl font-medium my-8 mx-auto uppercase text-fuchsia-300 font-serif">Create your email flow</h1>
+        <h1 className="text-6xl font-medium my-8 mx-auto uppercase text-blue-400 font-serif">Create your email flow</h1>
 
         {/* Cards Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

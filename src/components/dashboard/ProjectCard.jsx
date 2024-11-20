@@ -9,7 +9,7 @@ const ProjectCard = ({ id, name }) => {
       className="p-4 border rounded-md shadow-md bg-white hover:shadow-lg cursor-pointer flex items-center justify-center"
       onClick={() => navigate(`/project/${id}`)}
     >
-      <h3 className="text-lg font-bold text-center">{name}</h3>
+      <h3 className="text-lg  text-center font-sans ">{name}</h3>
     </div>
   );
 };

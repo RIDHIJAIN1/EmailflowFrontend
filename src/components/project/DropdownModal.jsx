@@ -86,7 +86,7 @@ const DropdownModal = ({ isOpen, onClose, onSelect, modalType, selectedLists }) 
               <label className="block text-sm font-medium mb-1">Select your List(s)</label>
               {modalType == '1' ?
                 <button
-                  onClick={() => handleNavigate("/createlist")}
+                  onClick={() => navigate("/createlist")}
                   className="px-4 py-1 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 >
                   Create List
