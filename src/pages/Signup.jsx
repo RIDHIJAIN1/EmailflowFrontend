@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for page r
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { userSignup } from '../utils/api';
+import { useAuth } from '../AuthContext';
 
 const Signup = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -25,6 +27,7 @@ const Signup = () => {
     setLoading(true);
     const data =await userSignup(userData);
     toast.success('Signup successful! Redirecting to home page...');
+    login(data.token);
 
     setTimeout(()=>{
         navigate('/')

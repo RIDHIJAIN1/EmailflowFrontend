@@ -64,9 +64,8 @@ const Mapping = () => {
     }));
 
     try {
-        console.log(payload)
+      
       const response = await createMapping(payload); // POST the data to the API
-      console.log("Mapping data submitted successfully:", response.data);
         toast.success ("Mapping data submitted successfully!");
         setTimeout(()=>{
             navigate(`//${newList.data._id}`);

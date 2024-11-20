@@ -43,7 +43,6 @@ export const createProject = async (projectData) => {
 export const fetchProject = async (projectData) => {
   try {
     const response = await apiClient.get(`/projects`, projectData);
-   
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error.message;
