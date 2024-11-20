@@ -85,7 +85,7 @@ License:
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 Contact:
-For questions or feedback, feel free to reach out to me via email at [your-email@example.com].
+For questions or feedback, feel free to reach out to me via email at [ridhijain7300@gmail.com].
 
 markdown
 Copy code
