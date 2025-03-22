@@ -32,7 +32,7 @@ const Dashboard = () => {
       const response = await createProject({ name: projectName }); // Assuming response contains the project data
       const newProject = {
         id: response.data.id || response.data._id, // Use id or _id from response
-        name: response.data.name || projectName,  // Fallback to the provided name
+        name: response.data.name || projectName, // Fallback to the provided name
       };
       setProjects((prev) => [...prev, newProject]); // Add the new project to the state
       setIsModalOpen(false); // Close the modal
@@ -55,16 +55,24 @@ const Dashboard = () => {
       <div className="min-h-[24vh]"></div>
       <div className="mx-[15%] mt-[-14vh]">
         {/* Heading Section */}
-        <h1 className="text-6xl font-medium my-8 mx-auto uppercase text-blue-400 font-serif">Create your email flow</h1>
+        <h1 className="text-6xl font-medium my-8 mx-auto uppercase text-blue-400 font-serif">
+          Create your email flow
+        </h1>
 
         {/* Cards Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Create Project Card */}
           <CreateProjectCard onCreate={openModal} />
           {/* Project Cards */}
-          {projects.map((project) => (
-            <ProjectCard key={project.id} id={project._id} name={project.name} />
-          ))}
+          {projects.map((project) => {
+            return (
+              <ProjectCard
+                key={project.id}
+                id={project._id}
+                name={project.name}
+              />
+            );
+          })}
         </div>
       </div>
 

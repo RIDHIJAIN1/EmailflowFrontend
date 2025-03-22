@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-import { createTemplate } from "../../utils/api";
+import { createTemplate } from "../utils/api";
+// import { createTemplate } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
-const TemplateModal = ({ onClose }) => {
+const CreateTemplate = ({ onClose }) => {
+const navigate = useNavigate();
   const [templateData, setTemplateData] = useState({
     name: "",
     template: "",
@@ -20,6 +24,10 @@ const TemplateModal = ({ onClose }) => {
     }));
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -27,8 +35,11 @@ const TemplateModal = ({ onClose }) => {
 
     try {
       const response = await createTemplate(templateData); // Call the API
-      console.log("Template created successfully:", response);
-      onClose(); // Close the modal after successful submission
+      toast.success("Template Created Successfully");
+      setTimeout(()=>{
+        handleGoBack();
+      }, 2000)
+     
     } catch (err) {
       console.error("Error creating template:", err);
       setError(err?.message || "Failed to create template."); // Set the error state
@@ -148,4 +159,4 @@ const TemplateModal = ({ onClose }) => {
   );
 };
 
-export default TemplateModal;
+export default CreateTemplate;

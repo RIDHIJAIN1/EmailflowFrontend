@@ -8,7 +8,7 @@ const DropdownModal = ({ isOpen, onClose, onSelect, modalType, selectedLists }) 
   const [selectedListId, setSelectedListId] = useState(null);
   const [lists, setLists] = useState([]);
   const [templates, setTemplates] = useState([]);
-  const [isModalOpen , setIsModalOpen ] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const DropdownModal = ({ isOpen, onClose, onSelect, modalType, selectedLists }) 
         try {
           const listsResponse = await apiClient.get('/lists');
           const templatesResponse = await apiClient.get('/mails');
-          console.log(listsResponse.data);
+          
           // Ensure you access the 'data' key that contains the list information
           setLists(listsResponse.data?.data ?? []); // fallback to an empty array if no data
           setTemplates(templatesResponse.data?.data ?? []); // same here
@@ -54,15 +54,7 @@ const DropdownModal = ({ isOpen, onClose, onSelect, modalType, selectedLists }) 
       onClose(); // Close modal after insertion
     }
   };
-  const openTemplateModal = () => {
-    setIsModalOpen(true); // Open TemplateModal
-    onClose(); // Close DropdownModal
-  };
 
-  const handleTemplateSubmit = (templateData) => {
-    console.log("Template submitted:", templateData);
-    setIsModalOpen(false); // Close TemplateModal after submission
-  };
 
  
 
@@ -94,7 +86,7 @@ const DropdownModal = ({ isOpen, onClose, onSelect, modalType, selectedLists }) 
                 : ''}
               {modalType == '3' ?
                 <button
-                  onClick={() => handleNavigate("/createlist")}
+                  onClick={() => navigate("/createTemplate")}
                   className="px-4 py-1 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 >
                   Create Template

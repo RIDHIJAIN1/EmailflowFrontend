@@ -88,15 +88,15 @@ function Project() {
     [nodes, setModalOpen, setDropdownModalOpen, setModalContent, edges]
   );
 
-  const closeModal = () => {
-    setModalOpen(false);
-    setDropdownModalOpen(false);
-  };
+    const closeModal = () => {
+      setModalOpen(false);
+      setDropdownModalOpen(false);
+    };
 
-  const handleModalSelect = () => {
-    setModalOpen(false); // Close SourceBlockModal
-    setDropdownModalOpen(true); // Open DropdownModal after closing SourceBlockModal
-  };
+    const handleModalSelect = () => {
+      setModalOpen(false); // Close SourceBlockModal
+      setDropdownModalOpen(true); // Open DropdownModal after closing SourceBlockModal
+    };
 
   // const handleRemoveNode = (nodeId) => {
   //   setNodes((nds) => nds.filter((node) => node.id !== nodeId));
@@ -121,7 +121,7 @@ function Project() {
     console.log(edges_connected);
   };
 
-  const [waitModalOpen, setWaitModalOpen] = useState(false);
+    const [waitModalOpen, setWaitModalOpen] = useState(false);
 
   const handleWaitInsert = (data) => {
     // Process and add the wait block data to the nodes or logic
@@ -143,13 +143,13 @@ function Project() {
     setModalOpen(false);
   };
 
-  const handleWaitOpen = () => {
-    setWaitModalOpen(true);
-  };
+    const handleWaitOpen = () => {
+      setWaitModalOpen(true);
+    };
 
-  const handleDropdownSelect = (selectedName, selectedId) => {
-    const node1 = nodes.find((node) => node.id === "1"); // Node 1 reference
-    const node3 = nodes.find((node) => node.id === "3"); // Node 3 reference
+    const handleDropdownSelect = (selectedName, selectedId) => {
+      const node1 = nodes.find((node) => node.id === "1"); // Node 1 reference
+      const node3 = nodes.find((node) => node.id === "3"); // Node 3 reference
 
     if (modalType === 1 && node1) {
       createNewListNode(
@@ -196,34 +196,38 @@ function Project() {
     }
   };
 
-  const handelSave = async () => {
-    const lists = nodes.filter(
-      (node) => !["1", "2", "3"].includes(node.id) && node.data?.type === "list"
-    );
+    const handelSave = async () => {
+      const lists = nodes.filter(
+        (node) => !["1", "2", "3"].includes(node.id) && node.data?.type === "list"
+      );
 
-    const sequences = nodes.filter(
-      (node) => !["1", "2", "3"].includes(node.id) && node.data?.type !== "list"
-    );
-    // Extract lists data
-    const extractedLists = lists.map((list) => list.data.id);
-    // Extract sequences data
-    const extractedSequences = sequences.map((sequence) => {
-      if (sequence.data.type === "mail") {
-        return { id: sequence.data.id, type: sequence.data.type };
-      } else if (sequence.data.type === "wait") {
-        return {
-          waitFor: sequence.data.waitFor,
-          waitType: sequence.data.waitType,
-          type: sequence.data.type,
-        };
+      const sequences = nodes.filter(
+        (node) => !["1", "2", "3"].includes(node.id) && node.data?.type !== "list"
+      );
+
+      if (lists.length === 0 && sequences.length === 0) {
+        toast.error("Please create a sequence flow first before saving.");
+        return; // Exit the function early
       }
-    });
+      // Extract lists data
+      const extractedLists = lists.map((list) => list.data.id);
+      // Extract sequences data
+      const extractedSequences = sequences.map((sequence) => {
+        if (sequence.data.type === "mail") {
+          return { id: sequence.data.id, type: sequence.data.type };
+        } else if (sequence.data.type === "wait") {
+          return {
+            waitFor: sequence.data.waitFor,
+            waitType: sequence.data.waitType,
+            type: sequence.data.type,
+          };
+        }
+      });
 
-    const result = {
-      lists: extractedLists,
-      sequences: extractedSequences,
-    };
-    console.log(JSON.stringify(result, null, 2));
+      const result = {
+        lists: extractedLists,
+        sequences: extractedSequences,
+      };
 
     try {
       const savedData = await saveSequence(id, { sequence: result });
@@ -333,4 +337,4 @@ function Project() {
   );
 }
 
-export default Project;
+  export default Project;

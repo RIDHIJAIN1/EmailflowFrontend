@@ -12,6 +12,7 @@ import Signup from './pages/Signup.jsx';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import Mapping from './pages/Mapping.jsx';
+import CreateTemplate from './pages/CreateTemplate.jsx';
 const App = () => {
   return (
     <AuthProvider>
@@ -27,6 +28,7 @@ const App = () => {
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="createlist" element={<CreateList />} />
+              <Route path="createTemplate" element={<CreateTemplate />} />
               <Route path="mapping/:id" element={<Mapping />} />
               <Route path="project/:id" element={<Project />} />
             </Route>

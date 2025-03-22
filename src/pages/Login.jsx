@@ -27,7 +27,12 @@ const Login = () => {
       navigate('/');
     } catch (error) {
       setError(error);  // Set error if login fails
-      toast.error(error.message || 'Login failed. Please try again.');
+      if (error.response && error.response.status === 401) {
+        // Assuming 401 status is returned for incorrect password
+        toast.error('Incorrect email or password. Please try again.');
+      } else {
+        toast.error(error.message || 'Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);  // Stop the loading state
     }
