@@ -10,20 +10,19 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch projects from the API
-  useEffect(() => {
-    const fetchProjectsFromAPI = async () => {
-      try {
-        const response = await fetchProject();
-        if (Array.isArray(response.data.projects)) {
-          setProjects(response.data.projects); // If it's an array, set it to state
-        } else {
-          console.error("API response is not an array:", fetchedProjects);
-        }
-      } catch (error) {
-        console.error("Error fetching projects:", error);
+  const fetchProjectsFromAPI = async () => {
+    try {
+      const response = await fetchProject();
+      if (Array.isArray(response.data.projects)) {
+        setProjects(response.data.projects); // If it's an array, set it to state
+      } else {
+        console.error("API response is not an array:", fetchedProjects);
       }
-    };
-
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+  useEffect(() => {
     fetchProjectsFromAPI();
   }, []);
 
@@ -37,6 +36,7 @@ const Dashboard = () => {
       };
       setProjects((prev) => [...prev, newProject]); // Add the new project to the state
       setIsModalOpen(false); // Close the modal
+      fetchProjectsFromAPI();
     } catch (error) {
       console.error("Error creating project:", error);
     }

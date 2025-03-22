@@ -1,34 +1,19 @@
-import {
-  addEdge,
-  Background,
-  Controls,
-  MiniMap,
-  ReactFlow,
-  useEdgesState,
-  useNodesState,
-} from "@xyflow/react";
+import { addEdge, Background, Controls, MiniMap, ReactFlow, useEdgesState, useNodesState } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import CustomNode from "../../components/project/CustomNode";
+import { toast } from "react-toastify";
 import DropdownModal from "../../components/project/DropdownModal";
 import SourceBlockModal from "../../components/project/SourceBlockModal";
 import WaitModal from "../../components/project/WaitModal";
-import { createNewEmailNode, createNewListNode } from "./services";
 import { getProjectById, saveSequence, startProject } from "../../utils/api";
-import { toast } from "react-toastify";
-// import { useParams } from 'react-router-dom';
+import { createNewEmailNode, createNewListNode } from "./services";
 
 const initialNodes = [
   {
-    id: "1",
-    position: { x: 100, y: 10 },
-    data: {
+    id: "1", position: { x: 100, y: 25 }, data: {
       label: (
-        <>
-          <p>+</p>
-          <p>Add Lead Source</p>
-        </>
+        <> <p>+</p> <p>Add Lead Source</p></>
       ),
     },
   },
@@ -60,7 +45,7 @@ function Project() {
   const [modalContent, setModalContent] = useState({});
   const [showWaitField, setShowWaitField] = useState(false);
   const [modalType, setModalType] = useState(1);
-  const [isSaved , setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   // horizontal = 1   vertical = 3
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -100,7 +85,7 @@ function Project() {
         setDropdownModalOpen(false);
       }
     },
-    [nodes, setModalOpen, setDropdownModalOpen, setModalContent]
+    [nodes, setModalOpen, setDropdownModalOpen, setModalContent, edges]
   );
 
   const closeModal = () => {
@@ -113,11 +98,27 @@ function Project() {
     setDropdownModalOpen(true); // Open DropdownModal after closing SourceBlockModal
   };
 
-  const handleRemoveNode = (nodeId) => {
-    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-    setEdges((eds) =>
-      eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
-    );
+  // const handleRemoveNode = (nodeId) => {
+  //   setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+  //   setEdges((eds) =>
+  //     eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
+  //   );
+  // };
+
+  const onEdit = (e) => {
+    let clicked_node = e.target.closest('.relative');
+    let haveIdElement = clicked_node ? clicked_node.querySelector('.have-id') : null;
+    let clicked_node_id = haveIdElement ? haveIdElement.dataset.id : null;
+    console.log(`onEdit triggered ${clicked_node_id}`);
+  };
+
+  const onDelete = (e) => {
+    let clicked_node = e.target.closest('.relative');
+    let haveIdElement = clicked_node ? clicked_node.querySelector('.have-id') : null;
+    let clicked_node_id = haveIdElement ? haveIdElement.dataset.id : null;
+    console.log(edges);
+    let edges_connected = edges.filter((edge) => edge.source == clicked_node_id || edge.target == clicked_node_id);
+    console.log(edges_connected);
   };
 
   const [waitModalOpen, setWaitModalOpen] = useState(false);
@@ -134,7 +135,9 @@ function Project() {
       setEdges,
       data,
       null,
-      type
+      type,
+      onEdit,
+      onDelete
     );
     setWaitModalOpen(false);
     setModalOpen(false);
@@ -157,9 +160,12 @@ function Project() {
         setEdges,
         addEdge,
         selectedName,
-        selectedId
+        selectedId,
+        onEdit,
+        onDelete
       );
     } else if (modalType === 3 && node3) {
+      const type = 'email';
       createNewEmailNode(
         node3,
         nodes,
@@ -167,17 +173,20 @@ function Project() {
         edges,
         setEdges,
         selectedName,
-        selectedId
+        selectedId,
+        type,
+        onEdit,
+        onDelete
       );
     }
   };
 
   const handleStart = async () => {
-    if(!isSaved){
+    if (!isSaved) {
       toast.warning("Please save your project before starting")
       return;
     }
-    try {    
+    try {
       const response = await startProject(id);
       toast.success("Flow will begin in an hour")
       console.log(response);
@@ -227,18 +236,18 @@ function Project() {
     }
   };
 
-  useEffect(() => {
-    const fetchProject = async (id) => {
-      try {
-        const response = await getProjectById(id);
-        setProjects(response);
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchProject(id);
+  const fetchProject = async (id) => {
+    try {
+      const response = await getProjectById(id);
+      // console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  useEffect(() => {
+    // fetchProject(id);
+    // console.log(edges); 
     const listNodes = nodes.filter(
       (node) => !["1", "2", "3"].includes(node.id) && node.data?.type !== "list"
     );
@@ -256,25 +265,25 @@ function Project() {
           <h1 className="font-serif text-4xl font-semibold pt-10  text-blue-400">
             Design Your Email Marketing Sequence Flow
           </h1>
-         
+
         </div>
         <div className="flex justify-center">
-        <button
-  type="button"
-  className="px-6 py-2 mr-2 text-white bg-gradient-to-r from-blue-400 to-blue-500 shadow-md rounded-lg hover:from-blue-500 hover:to-blue-600 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
-  onClick={handelSave}
->
-  Save
-</button>
-<button
-  type="button"
-  className="px-6 py-2 text-white bg-gradient-to-r from-indigo-500 to-indigo-600 shadow-md rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-400"
-  onClick={handleStart}
->
-  Start
-</button>
+          <button
+            type="button"
+            className="px-6 py-2 mr-2 text-white bg-gradient-to-r from-blue-400 to-blue-500 shadow-md rounded-lg hover:from-blue-500 hover:to-blue-600 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            onClick={handelSave}
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            className="px-6 py-2 text-white bg-gradient-to-r from-indigo-500 to-indigo-600 shadow-md rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-400"
+            onClick={handleStart}
+          >
+            Start
+          </button>
 
-          </div>
+        </div>
         <div className="" style={{ width: "100vw", height: "200vh" }}>
           <ReactFlow
             nodes={nodes}
@@ -283,18 +292,7 @@ function Project() {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             onNodeClick={handleNodeClick}
-            nodeTypes={{
-              custom: (nodeProps) => (
-                <CustomNode
-                  {...nodeProps}
-                  onRemove={handleRemoveNode}
-                  onEdit={(nodeId) => {
-                    // Add your logic for handling the edit functionality
-                    console.log(`Edit node: ${nodeId}`);
-                  }}
-                />
-              ),
-            }}
+
           >
             <Controls />
             <MiniMap />

@@ -1,12 +1,13 @@
+import { NodeWrapper } from "../../components/project/NodeWrapper";
 const listNodeStyle = {
     border: '2px solid #FF5733',
     borderRadius: '5px',
     padding: '10px',
     background: 'white',
 };
-function ListElement({ selectedList }) {
+function ListElement({ selectedList, new_id }) {
     return (
-        <><p style={{ color: "#FF5733" }}>Lead Source</p><p>{selectedList}</p></>
+        <><p className="have-id" data-id={new_id} style={{ color: "#FF5733" }}>Lead Source</p><p>{selectedList}</p></>
     )
 }
 
@@ -16,9 +17,9 @@ const mailNodeStyle = {
     padding: '10px',
     background: 'white',
 };
-function TemplateElement({ selectedList }) {
+function TemplateElement({ selectedList, new_id }) {
     return (
-        <><p style={{ color: "#40E0D0" }}>Mail Template</p><p>{selectedList}</p></>
+        <><p className="have-id" data-id={new_id} style={{ color: "#40E0D0" }}>Mail Template</p><p>{selectedList}</p></>
     )
 }
 
@@ -28,18 +29,18 @@ const waitNodeStyle = {
     padding: '10px',
     background: 'white',
 };
-function WaitElement({ waitFor, waitType }) {
+function WaitElement({ waitFor, waitType, new_id }) {
     return (
-        <><p style={{ color: "#DAA520" }}>Wait</p><p>{waitFor} {waitType}</p></>
+        <><p className="have-id" data-id={new_id} style={{ color: "#DAA520" }}>Wait</p><p>{waitFor} {waitType}</p></>
     )
 }
-
 // This function handles adding a new node horizontally from Node 1
-export const createNewListNode = (node, nodes, setNodes, edges, setEdges, addEdge, selectedName, selectedId) => {
+export const createNewListNode = (node, nodes, setNodes, edges, setEdges, addEdge, selectedName, selectedId, onEdit, onDelete) => {
+    let new_id = nodes.length + 1;
     const newNode = {
-        id: `${nodes.length + 1}`, // Unique ID
+        id: `${new_id}`, // Unique ID
         position: { x: node.position.x, y: node.position.y }, // Same position as Node 1
-        data: { label: (<ListElement selectedList={selectedName} />), type: "list", id: selectedId},
+        data: { label: (<NodeWrapper onEdit={onEdit} onDelete={onDelete}><ListElement selectedList={selectedName} new_id={new_id} /></NodeWrapper>), type: "list", id: selectedId },
         style: listNodeStyle
     };
 
@@ -59,20 +60,21 @@ export const createNewListNode = (node, nodes, setNodes, edges, setEdges, addEdg
     setNodes([...updatedNodes, newNode]); // Add new node to state
 };
 // This function handles adding a new node vertically from Node 3
-export const createNewEmailNode = (node, nodes, setNodes, edges, setEdges, selectedName, selectedId, type='email') => {
+export const createNewEmailNode = (node, nodes, setNodes, edges, setEdges, selectedName, selectedId, type = 'email', onEdit, onDelete) => {
     let newNode = {};
-    if(type=='wait'){
+    let new_id = nodes.length + 1;
+    if (type == 'wait') {
         newNode = {
-            id: `${nodes.length + 1}`, // Unique ID
+            id: `${new_id}`, // Unique ID
             position: { x: node.position.x, y: node.position.y }, // Same position as Node 3
-            data: { label: (<WaitElement waitFor={selectedName.waitFor} waitType={selectedName.waitType} />), type: "wait", waitFor:selectedName.waitFor, waitType:selectedName.waitType },
+            data: { label: (<NodeWrapper onEdit={onEdit} onDelete={onDelete}><WaitElement waitFor={selectedName.waitFor} waitType={selectedName.waitType} new_id={new_id} /></NodeWrapper>), type: "wait", waitFor: selectedName.waitFor, waitType: selectedName.waitType },
             style: waitNodeStyle
         };
-    } else{
+    } else {
         newNode = {
-            id: `${nodes.length + 1}`, // Unique ID
+            id: `${new_id}`, // Unique ID
             position: { x: node.position.x, y: node.position.y }, // Same position as Node 3
-            data: { label: (<TemplateElement selectedList={selectedName} />), type: "mail", id: selectedId },
+            data: { label: (<NodeWrapper onEdit={onEdit} onDelete={onDelete}><TemplateElement selectedList={selectedName} new_id={new_id} /></NodeWrapper>), type: "mail", id: selectedId },
             style: mailNodeStyle
         };
     }
